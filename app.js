@@ -29,7 +29,7 @@ function serveStatic(response, cache, absPath) {
                     if (err) {
                         send404(response);
                     } else {
-                        // cache[absPath] = data;
+                        cache[absPath] = data;
                         sendFile(response, absPath, data);
                     }
                 });
@@ -48,7 +48,7 @@ var server = http.createServer(function(request, response) {
     } else {
         filePath = 'public' + request.url;
     }
-    var absPath = './' + filePath;
+    var absPath = __dirname + '/' + filePath;
     serveStatic(response, cache, absPath);
 });
 
