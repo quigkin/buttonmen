@@ -1,0 +1,28 @@
+{
+  "name": "buttonmen",
+  "version": "0.0.1",
+  "description": "Implementation of Button Men from Cheapass Games.",
+  "dependencies": {
+      "socket.io": "~0.9.6",
+      "mime": "~1.2.7"
+  },
+  "main": "app.js",
+  "scripts": {
+    "start": "node ./app.js",
+    "test": "test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quigkin/buttonmen.git"
+  },
+  "keywords": [
+    "buttonmen",
+    "game"
+  ],
+  "author": "Quigkin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/quigkin/buttonmen/issues"
+  },
+  "homepage": "https://github.com/quigkin/buttonmen"
+}

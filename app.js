@@ -1,15 +1,59 @@
-// Load the http module to create an http server.
-var http = require('http');
+var http = require('http'),
+    fs = require('fs'),
+    path = require('path'),
+    mime = require('mime'),
+    cache = {},
+    chatServer = require('./lib/chat_server');
 
-// Configure our HTTP server to respond with Hello World to all requests.
-var server = http.createServer(function (request, response) {
-  response.writeHead(200, {"Content-Type": "text/plain"});
-  response.end("Hello World\n");
+function send404(response) {
+    response.writeHead(404, {'Content-Type': 'text/plain'});
+    response.write('Error 404: resource not found.');
+    response.end();
+}
+
+function sendFile(response, filePath, fileContents) {
+    response.writeHead(
+        200,
+        {'Content-Type': mime.lookup(path.basename(filePath))}
+    );
+    response.end(fileContents);
+}
+
+function serveStatic(response, cache, absPath) {
+    if (cache[absPath]) {
+        sendFile(response, absPath, cache[absPath]);
+    } else {
+        fs.exists(absPath, function(exists) {
+            if (exists) {
+                fs.readFile(absPath, function(err, data) {
+                    if (err) {
+                        send404(response);
+                    } else {
+                        // cache[absPath] = data;
+                        sendFile(response, absPath, data);
+                    }
+                });
+            } else {
+                send404(response);
+            }
+        });
+    }
+}
+
+var server = http.createServer(function(request, response) {
+    var filePath = false;
+
+    if (request.url == '/') {
+        filePath = 'public/index.html';
+    } else {
+        filePath = 'public' + request.url;
+    }
+    var absPath = './' + filePath;
+    serveStatic(response, cache, absPath);
 });
 
-// Listen on port 8000, IP defaults to 127.0.0.1
-server.listen(3000);
+server.listen(3000, function() {
+    console.log('Server listening on port 3000');
+});
 
-// Put a friendly message on the terminal
-console.log("Server running at http://127.0.0.1:3000/");
-
+chatServer.listen(server);
