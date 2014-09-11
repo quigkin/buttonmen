@@ -3,7 +3,7 @@ var http = require('http'),
     path = require('path'),
     mime = require('mime'),
     cache = {},
-    chatServer = require('./lib/chat_server');
+    chatServer = require('./api/chat_server');
 
 function send404(response) {
     response.writeHead(404, {'Content-Type': 'text/plain'});
@@ -43,10 +43,13 @@ function serveStatic(response, cache, absPath) {
 var server = http.createServer(function(request, response) {
     var filePath = false;
 
+    // this should never happen if we are proxying
     if (request.url == '/') {
-        filePath = 'public/index.html';
+        filePath = 'app/index.html';
+    // } else if (request.url.indexOf('/api') == 0) {
+    //     filePath = request.url.substring(1);
     } else {
-        filePath = 'public' + request.url;
+        filePath = request.url;
     }
     var absPath = __dirname + '/' + filePath;
     serveStatic(response, cache, absPath);
