@@ -1,4 +1,4 @@
-Chat = function(socket) {
+var Chat = function(socket) {
     this.socket = socket;
 };
 
