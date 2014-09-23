@@ -3,7 +3,7 @@
 describe('Controller: AboutCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('myNgApp'));
+  beforeEach(module('buttonmenApp'));
 
   var AboutCtrl,
     scope;

@@ -2,13 +2,18 @@
 
 /**
  * @ngdoc function
- * @name myNgApp.controller:MainCtrl
+ * @name buttonmenApp.controller:MainController
  * @description
- * # MainCtrl
- * Controller of the myNgApp
+ * # MainController
+ * Controller of the buttonmenApp
  */
-angular.module('myNgApp')
-  .controller('MainCtrl', function ($scope) {
+angular.module('buttonmenApp')
+  .controller('MainController', function ($scope) {
+    $scope.nickname = 'Guest 1242341';
+
+
+
+
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',

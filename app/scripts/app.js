@@ -2,14 +2,14 @@
 
 /**
  * @ngdoc overview
- * @name myNgApp
+ * @name buttonmenApp
  * @description
- * # myNgApp
+ * # Implementation of Cheapass Games' Button Men
  *
  * Main module of the application.
  */
 angular
-  .module('myNgApp', [
+  .module('buttonmenApp', [
     'ngAnimate',
     'ngCookies',
     'ngResource',
@@ -21,7 +21,7 @@ angular
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+        controller: 'MainController'
       })
       .when('/about', {
         templateUrl: 'views/about.html',
