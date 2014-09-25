@@ -1,13 +1,54 @@
-main template
 <div class="row">
+  <form name="name_form" ng-submit="submitName()" novalidate>
   <span>Player Name</span>
-  <span name="nicknameDisplay">{{ nickname }}</span>
-  <input
-    ng-model="nickname"
-    name="nicknameEntry"
-    type="text"
-    placeholder="Enter a nickname"
-    ng-minlength=3
-    ng-maxlength=30 required />
+  <span
+    name="nicknameDisplay"
+    class="btn btn-link"
+    title="Click to enter name"
+    ng-click="inputName()"
+    ng-hide="enteringName">
+    {{ nickname }}
+  </span>
+  <span ng-show="enteringName">
+    <input
+      id="nicknameEntry"
+      name="nicknameEntry"
+      ng-model="nickname"
+      type="text"
+      placeholder="Enter a nickname"
+      ng-minlength="3"
+      ng-maxlength="30"
+      required />
+
+      <!-- ng-pattern="[a-zA-Z]*" -->
+    <button type="submit" class="btn btn-xs btn-primary">ok</button>
+    <button type="button" class="btn btn-xs btn-default" ng-click="resetName()">cancel</button>
+    <span class="error" ng-show="name_form.$dirty && name_form.$invalid">
+      <small ng-show="name_form.nicknameEntry.$error.required">What am I supposed to call you?</small>
+      <small ng-show="name_form.nicknameEntry.$error.minlength">Your name is too short!</small>
+      <small ng-show="name_form.nicknameEntry.$error.maxlength">Your name is too long!</small>
+      <small ng-show="name_form.nicknameEntry.$error.pattern">Your name is too fancy!</small>
+      <small ng-show="name_form.nicknameEntry.$error.stored">{{changeErrorMessage}}</small>
+    <span>
+  </span>
+  </form>
 </div>
 
+<div id="content">
+  <div id="room"></div>
+  <div id="room-list"></div>
+  <div id="messages"></div>
+
+  <form id="send-form" novalidate>
+    <input id="send-message">
+    <input id="send-button" type="submit" value="Send">
+
+    <div id="help">
+      Chat commands:
+      <ul>
+        <li>Change nickname: <code>/nick [username]</code></li>
+        <li>Join/create room: <code>/join [room name]</code></li>
+      </ul>
+    </div>
+  </form>
+</div>

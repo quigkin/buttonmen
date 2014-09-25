@@ -15,10 +15,6 @@ Chat.prototype.changeRoom = function(room) {
     });
 };
 
-Chat.prototype.changeName = function(name) {
-    this.socket.emit('nameAttempt', name);
-};
-
 Chat.prototype.processCommand = function(command) {
     var words = command.split(' ');
     // strip leading / & lowercase

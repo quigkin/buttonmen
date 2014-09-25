@@ -22,21 +22,9 @@ function processUserInput(chatApp, socket) {
     $('#send-message').val('');
 }
 
-var socket = io.connect();
-
 $(document).ready(function() {
 
     var chatApp = new Chat(socket);
-
-    socket.on('nameResult', function(result) {
-        var message;
-        if (result.success) {
-            message = 'You are now known as ' + result.name + '.';
-        } else {
-            message = result.message;
-        }
-        $('#messages').append(divSystemContentElement(message));
-    });
 
     socket.on('joinResult', function(result) {
         $('#room').text(result.room);

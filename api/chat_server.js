@@ -1,4 +1,5 @@
 var socketio = require('socket.io'),
+    uuid = require('node-uuid'),
     io,
     guestNumber = 1,
     nickNames = {},

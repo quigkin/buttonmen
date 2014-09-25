@@ -8,6 +8,11 @@
  *
  * Main module of the application.
  */
+
+
+// transitional until old chat code is removed
+var socket = io.connect();
+
 angular
   .module('buttonmenApp', [
     'ngAnimate',
