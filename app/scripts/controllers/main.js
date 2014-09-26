@@ -24,6 +24,10 @@ angular.module('buttonmenApp')
         $scope.enteringName = false;
     };
 
+    $scope.hostGame = function() {
+        ChatService.hostGame();
+    },
+
     socket.on('nameResult', function(result) {
         if (result.success) {
             $scope.nickname = result.name;

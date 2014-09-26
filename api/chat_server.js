@@ -4,7 +4,10 @@ var socketio = require('socket.io'),
     guestNumber = 1,
     nickNames = {},
     namesUsed = [],
-    currentRoom = {};
+    currentRoom = {},
+    rooms = {
+        'Lobby': 'Lobby'
+    };
 
 exports.listen = function(server) {
     io = socketio.listen(server);
@@ -17,13 +20,20 @@ exports.listen = function(server) {
         handleMessageBroadcasting(socket, nickNames);
         handleNameChangeAttempts(socket, nickNames, namesUsed);
         handleRoomJoining(socket);
+        handleHostGame(socket);
 
         socket.on('rooms', function() {
-            socket.emit('rooms', io.sockets.manager.rooms);
+            socket.emit('rooms', rooms);
         });
+        socket.emit('rooms', rooms);
 
         handleClientDisconnection(socket, nickNames, namesUsed);
     });
+
+    setInterval(function() {
+        removeUnusedRooms();
+        io.sockets.to('Lobby').emit('rooms', rooms);
+    }, 2500);
 }
 
 function assignGuestName(socket, guestNumber, nickNames, namesUsed) {
@@ -37,7 +47,16 @@ function assignGuestName(socket, guestNumber, nickNames, namesUsed) {
     return guestNumber + 1;
 }
 
-function joinRoom(socket, room) {
+function removeUnusedRooms() {
+    var currentRooms = io.sockets.manager.rooms;
+    for (room in rooms) {
+        if (currentRooms['/' + room] === undefined && room !== 'Lobby') {
+            delete rooms[room];
+        }
+    }
+}
+
+function joinRoom(socket, room, displayName) {
     socket.join(room);
     currentRoom[socket.id] = room;
     socket.emit('joinResult', {room: room});
@@ -80,6 +99,7 @@ function handleNameChangeAttempts(socket, nickNames, namesUsed) {
                     success: true,
                     name: name
                 });
+                changeRoomName(previousName, name);
             } else {
                 socket.emit('nameResult', {
                     success: false,
@@ -103,6 +123,23 @@ function handleRoomJoining(socket) {
         socket.leave(currentRoom[socket.id]);
         joinRoom(socket, room.newRoom);
     });
+}
+
+function handleHostGame(socket) {
+    socket.on('host', function() {
+        var newRoom = uuid.v4();
+        socket.leave(currentRoom[socket.id]);
+        joinRoom(socket, newRoom);
+        rooms[newRoom] = nickNames[socket.id];
+    });
+}
+
+function changeRoomName(oldName, newName) {
+    for (room in rooms) {
+        if (rooms[room] == oldName) {
+            rooms[room] = newName;
+        }
+    }
 }
 
 function handleClientDisconnection(socket) {

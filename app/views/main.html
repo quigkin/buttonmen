@@ -29,9 +29,11 @@
       <small ng-show="name_form.nicknameEntry.$error.maxlength">Your name is too long!</small>
       <small ng-show="name_form.nicknameEntry.$error.pattern">Your name is too fancy!</small>
       <small ng-show="name_form.nicknameEntry.$error.stored">{{changeErrorMessage}}</small>
-    <span>
+    </span>
   </span>
   </form>
+
+  <button type="button" class="btn btn-sm btn-success" ng-click="hostGame()">host game</button>
 </div>
 
 <div id="content">

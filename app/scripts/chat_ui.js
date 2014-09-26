@@ -37,22 +37,20 @@ $(document).ready(function() {
     });
 
     socket.on('rooms', function(rooms) {
+        console.log(rooms);
         $('#room-list').empty();
         for(var room in rooms) {
-            room = room.substring(1, room.length);
+            console.log(room);
             if (room != '') {
-                $('#room-list').append(divEscapedContentElement(room));
+                $('#room-list').append(divEscapedContentElement(rooms[room]));
             }
         }
         $('#room-list div').click(function() {
+            alert($(this).text());
             chatApp.processCommand('/join ' + $(this).text());
             $('#send-message').focus();
         });
     });
-
-    setInterval(function() {
-        socket.emit('rooms');
-    }, 1000);
 
     $('#send-message').focus();
 

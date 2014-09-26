@@ -5,6 +5,10 @@ angular.module('buttonmenApp').factory('ChatService', function() {
 
         changeName: function(name) {
             socket.emit('nameAttempt', name);
+        },
+
+        hostGame: function() {
+            socket.emit('host');
         }
 
     };
