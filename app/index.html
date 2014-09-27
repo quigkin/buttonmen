@@ -21,14 +21,51 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div class="container">
+    <div class="container" ng-controller="AppController">
+
       <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li class="active"><a ng-href="#">Home</a></li>
-          <li><a ng-href="#/about">About</a></li>
-          <li><a ng-href="#">Contact</a></li>
+        <ul class="nav nav-pills pull-right" ng-controller="NavController">
+          <li ng-class="{active: isActive('/')}"><a ng-href="#">Lobby</a></li>
+          <li ng-class="{active: isActive('/fight')}"><a ng-href="#/fight" ng-click="hostGame()">Fight</a></li>
+          <li ng-class="{active: isActive('/help')}"><a ng-href="#/help">Help</a></li>
         </ul>
-        <h3 class="text-muted">Button Men</h3>
+
+        <!-- this should become a directive that uses parent scope -->
+        <form name="name_form" class="form-inline pull-left" ng-submit="submitName()" novalidate>
+        <span
+          name="nicknameDisplay"
+          class="btn btn-link nickname"
+          title="Click to enter name"
+          ng-click="inputName()"
+          ng-hide="enteringName">
+          {{ nickname }}
+        </span>
+        <span ng-show="enteringName">
+          <input
+            id="nicknameEntry"
+            name="nicknameEntry"
+            ng-model="nickname"
+            type="text"
+            placeholder="Enter a nickname"
+            ng-minlength="3"
+            ng-maxlength="30"
+            required />
+
+          <button type="submit" class="btn btn-primary">ok</button>
+          <button type="button" class="btn btn-default" ng-click="resetName()">cancel</button>
+        </span>
+        </form>
+
+        <h3 class="text-muted text-center">Button Men</h3>
+
+          <div class="error alert alert-danger" ng-show="name_form.$dirty && name_form.$invalid">
+            <small ng-show="name_form.nicknameEntry.$error.required">What am I supposed to call you?</small>
+            <small ng-show="name_form.nicknameEntry.$error.minlength">Your name is too short!</small>
+            <small ng-show="name_form.nicknameEntry.$error.maxlength">Your name is too long!</small>
+            <small ng-show="name_form.nicknameEntry.$error.pattern">Your name is too fancy!</small>
+            <small ng-show="name_form.nicknameEntry.$error.stored">{{changeErrorMessage}}</small>
+          </div>
+
       </div>
 
       <div ng-view=""></div>
@@ -78,8 +115,12 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/about.js"></script>
+        <script src="scripts/controllers/app.js"></script>
+        <script src="scripts/controllers/fight.js"></script>
+        <script src="scripts/controllers/help.js"></script>
+        <script src="scripts/controllers/lobby.js"></script>
+        <script src="scripts/controllers/nav.js"></script>
+
         <script src="scripts/services/chat.js"></script>
         <!-- <script src="scripts/directives/focus.js"></script> -->
 

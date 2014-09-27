@@ -137,3 +137,8 @@ a{
 .error {
   color: red;
 }
+
+/* header elements */
+.header .nickname {
+  padding: 10px 15px;
+}

@@ -2,13 +2,14 @@
 
 /**
  * @ngdoc function
- * @name buttonmenApp.controller:MainController
+ * @name buttonmenApp.controller:AppController
  * @description
- * # MainController
+ * # AppController
  * Controller of the buttonmenApp
  */
-angular.module('buttonmenApp')
-  .controller('MainController', function ($scope, ChatService) {
+angular.module('buttonmenApp').controller('AppController', function ($scope, ChatService, $location) {
+
+    $scope.location = $location;
 
     $scope.inputName = function() {
         $scope.enteringName = true;
@@ -22,11 +23,8 @@ angular.module('buttonmenApp')
     $scope.resetName = function() {
         $scope.nickname = $scope.originalName;
         $scope.enteringName = false;
+        $scope.name_form.nicknameEntry.$setValidity('stored', true);
     };
-
-    $scope.hostGame = function() {
-        ChatService.hostGame();
-    },
 
     socket.on('nameResult', function(result) {
         if (result.success) {
@@ -39,4 +37,4 @@ angular.module('buttonmenApp')
         $scope.$apply();
     });
 
-  });
+});
