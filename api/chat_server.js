@@ -21,11 +21,11 @@ exports.listen = function(server) {
         handleNameChangeAttempts(socket, nickNames, namesUsed);
         handleRoomJoining(socket);
         handleHostGame(socket);
+        handleAck(socket);
 
         socket.on('rooms', function() {
             socket.emit('rooms', rooms);
         });
-        socket.emit('rooms', rooms);
 
         handleClientDisconnection(socket, nickNames, namesUsed);
     });
@@ -34,6 +34,21 @@ exports.listen = function(server) {
         removeUnusedRooms();
         io.sockets.to('Lobby').emit('rooms', rooms);
     }, 2500);
+}
+
+/*
+ * Provide the client with a hook to let the server know when
+ * it has finished setting up handlers for the socket created
+ * during the connection process.
+ */
+function handleAck(socket) {
+    socket.on('ack', function() {
+        socket.emit('rooms', rooms);
+        socket.emit('nameResult', {
+            success: true,
+            name: nickNames[socket.id]
+        });
+    });
 }
 
 function assignGuestName(socket, guestNumber, nickNames, namesUsed) {

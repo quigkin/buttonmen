@@ -37,4 +37,7 @@ angular.module('buttonmenApp').controller('AppController', function ($scope, Cha
         $scope.$apply();
     });
 
+    /* TODO: reorganize handlers to a place that makes more sense */
+    socket.emit('ack');
+
 });

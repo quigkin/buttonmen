@@ -8,8 +8,6 @@ A "pet project" implementation in nodejs of [Button Men](http://www.cheapass.com
 
 Bugs
 -----------
-* When refreshing the application, the socket 'nameResult' event will run before angular is done setting up the scope(?) 
-  and the nickname is not set. OR the nameResult event handler is not initialized and misses the event.
 
 
 Socket Info
