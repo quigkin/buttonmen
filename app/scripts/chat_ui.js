@@ -36,22 +36,6 @@ $(document).ready(function() {
         $('#messages').append(newElement);
     });
 
-    socket.on('rooms', function(rooms) {
-        console.log(rooms);
-        $('#room-list').empty();
-        for(var room in rooms) {
-            console.log(room);
-            if (room != '') {
-                $('#room-list').append(divEscapedContentElement(rooms[room]));
-            }
-        }
-        $('#room-list div').click(function() {
-            alert($(this).text());
-            chatApp.processCommand('/join ' + $(this).text());
-            $('#send-message').focus();
-        });
-    });
-
     $('#send-message').focus();
 
     $('#send-form').submit(function() {
