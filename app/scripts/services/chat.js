@@ -9,6 +9,12 @@ angular.module('buttonmenApp').factory('ChatService', function() {
 
         hostGame: function() {
             socket.emit('host');
+        },
+
+        changeRoom: function(room) {
+            socket.emit('join', {
+                newRoom: room
+            });
         }
 
     };

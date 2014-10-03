@@ -4,7 +4,7 @@ var socketio = require('socket.io'),
     guestNumber = 1,
     nickNames = {},
     namesUsed = [],
-    currentRoom = {};
+    occupancy = {};
 
 exports.listen = function(server) {
     io = socketio.listen(server);
@@ -12,13 +12,14 @@ exports.listen = function(server) {
 
     io.sockets.on('connection', function(socket) {
         guestNumber = assignGuestName(socket, guestNumber, nickNames, namesUsed);
-        joinRoom(socket, 'Lobby');
 
         handleMessageBroadcasting(socket, nickNames);
         handleNameChangeAttempts(socket, nickNames, namesUsed);
         handleRoomJoining(socket);
+        handleRoomLeaving(socket);
         handleHostGame(socket);
         handleRoomsBroadcasting(socket);
+        handleFightersBroadcasting(socket);
         handleAck(socket);
 
         handleClientDisconnection(socket, nickNames, namesUsed);
@@ -26,6 +27,7 @@ exports.listen = function(server) {
 
     setInterval(function() {
         io.sockets.to('Lobby').emit('rooms', rooms());
+        io.sockets.to('Lobby').emit('fighters', fighters());
     }, 2500);
 }
 
@@ -36,7 +38,6 @@ exports.listen = function(server) {
  */
 function handleAck(socket) {
     socket.on('ack', function() {
-        socket.emit('rooms', rooms());
         socket.emit('nameResult', {
             success: true,
             name: nickNames[socket.id]
@@ -55,29 +56,23 @@ function assignGuestName(socket, guestNumber, nickNames, namesUsed) {
     return guestNumber + 1;
 }
 
-function joinRoom(socket, room, displayName) {
+function fighters() {
+    return nickNames;
+}
+
+function leaveRoom(socket) {
+    console.log(nickNames[socket.id] + ' is leaving the room ' + occupancy[socket.id]);
+    socket.leave(occupancy[socket.id]);
+}
+
+function joinRoom(socket, room) {
+    console.log(nickNames[socket.id] + ' is entering the room ' + room);
     socket.join(room);
-    currentRoom[socket.id] = room;
-    socket.emit('joinResult', {room: room});
+    occupancy[socket.id] = room;
+
     socket.broadcast.to(room).emit('message', {
         text: nickNames[socket.id] + ' has joined ' + room + '.'
     });
-
-    var usersInRoom = io.sockets.clients(room);
-    if (usersInRoom.length > 1) {
-        var usersInRoomSummary = 'Users currently in ' + room + ': ';
-        for (var index in usersInRoom) {
-            var userSocketId = usersInRoom[index].id;
-            if (userSocketId != socket.id) {
-                if (index > 0) {
-                    usersInRoomSummary += ', ';
-                }
-                usersInRoomSummary += nickNames[userSocketId];
-            }
-        }
-        usersInRoomSummary += '.';
-        socket.emit('message', {text: usersInRoomSummary});
-    }
 }
 
 function handleNameChangeAttempts(socket, nickNames, namesUsed) {
@@ -122,6 +117,12 @@ function handleRoomsBroadcasting(socket) {
     });
 }
 
+function handleFightersBroadcasting(socket) {
+    socket.on('fighters', function() {
+        socket.emit('fighters', fighters());
+    });
+}
+
 function rooms() {
     var currentRooms = io.sockets.manager.rooms,
         rooms = [];
@@ -140,16 +141,22 @@ function rooms() {
 
 function handleRoomJoining(socket) {
     socket.on('join', function(room) {
-        socket.leave(currentRoom[socket.id]);
         joinRoom(socket, room.newRoom);
+    });
+}
+
+function handleRoomLeaving(socket) {
+    socket.on('leave', function(room) {
+        leaveRoom(socket);
     });
 }
 
 function handleHostGame(socket) {
     socket.on('host', function() {
         var newRoom = uuid.v4();
-        socket.leave(currentRoom[socket.id]);
+        console.log(occupancy);
         joinRoom(socket, newRoom);
+        console.log(occupancy);
     });
 }
 

@@ -4,6 +4,20 @@
   </ul>
 </div>
 
+<div class="row">
+  <ul>
+    <li ng-repeat="fighter in fighters | orderBy:'name'">
+        <span
+          name="fighterName"
+          class="btn btn-link"
+          title="Pick a fight with {{ fighter.name }}"
+          ng-click="pickAFight()">
+          {{ fighter.name }}
+        </span>
+      </li>
+  </ul>
+</div>
+
 <!-- old chat app layout -->
 <div id="content">
   <div id="messages"></div>

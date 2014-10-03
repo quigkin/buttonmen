@@ -26,11 +26,6 @@ $(document).ready(function() {
 
     var chatApp = new Chat(socket);
 
-    socket.on('joinResult', function(result) {
-        $('#room').text(result.room);
-        $('#messages').append(divSystemContentElement('Room changed.'));
-    });
-
     socket.on('message', function (message) {
         var newElement = $('<div></div>').text(message.text);
         $('#messages').append(newElement);

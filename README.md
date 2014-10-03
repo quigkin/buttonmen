@@ -6,6 +6,12 @@ A "pet project" implementation in nodejs of [Button Men](http://www.cheapass.com
 [![Build Status](https://travis-ci.org/quigkin/buttonmen.svg?branch=master)](https://travis-ci.org/quigkin/buttonmen)
 
 
+Next
+-----------
+* [client] Ensure re-entering Lobby gets all events
+* [server] Optimize sending large updates of rooms and names by only sending diffs
+* [client] Handle large lists
+
 Bugs
 -----------
 
