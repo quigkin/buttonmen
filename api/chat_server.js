@@ -21,6 +21,7 @@ exports.listen = function(server) {
         handleRoomsBroadcasting(socket);
         handleFightersBroadcasting(socket);
         handleAck(socket);
+        handleFightInvitation(socket);
 
         handleClientDisconnection(socket, nickNames, namesUsed);
     });
@@ -120,6 +121,24 @@ function handleRoomsBroadcasting(socket) {
 function handleFightersBroadcasting(socket) {
     socket.on('fighters', function() {
         socket.emit('fighters', fighters());
+    });
+}
+
+function handleFightInvitation(socket) {
+    // change the message to have a type: ['challenge', 'confirmation']
+    socket.on('invite', function(data) {
+        var challenger = nickNames[socket.id],
+            confirmation = data['confirmation'],
+            otherFighterSocketId = data['socketId'];
+
+        if (confirmation === undefined) {
+            io.sockets.socket(otherFighterSocketId).emit('invite', {name: nickNames[socket.id], socketId: socket.id});
+            // io.to(otherFighterSocketId).emit('invite', {name: nickNames[socket.id]});
+        } else {
+            io.sockets.socket(otherFighterSocketId).emit('invite', {name: nickNames[socket.id], socketId: socket.id, confirmation: confirmation});
+            // io.to(otherFighterSocketId).emit('invite', {name: nickNames[socket.id], confirmation: confirmation});
+        }
+
     });
 }
 

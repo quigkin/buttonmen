@@ -15,6 +15,7 @@ angular.module('buttonmenApp').controller('LobbyController', function ($scope, $
     //
     // i would like to be able to have multiple listeners
     // for the same event
+    // TODO: when returning to the Lobby, the guests/rooms don't refresh
     if (socket.listeners('rooms')[0] === undefined) {
     socket.on('rooms', function(rooms) {
         $scope.fights = rooms;
@@ -26,6 +27,20 @@ angular.module('buttonmenApp').controller('LobbyController', function ($scope, $
     socket.on('fighters', function(fighters) {
         $scope.fighters = $scope.parseFighters(fighters);
         $scope.$apply();
+    });
+    }
+
+    if (socket.listeners('invite')[0] === undefined) {
+    socket.on('invite', function(data) {
+        if (data['confirmation'] === undefined) {
+            data['confirmation'] =  confirm(data['name'] + " is challenging you! Fight?");
+            socket.emit('invite', data);
+        }
+        // if the invitation was accepted by either side
+        if (data['confirmation']) {
+            // TODO: they need to join the same room!!!
+            $location.path("/fight");
+        }
     });
     }
 
@@ -50,9 +65,9 @@ angular.module('buttonmenApp').controller('LobbyController', function ($scope, $
         return parsed;
     };
 
-    $scope.pickAFight = function() {
+    $scope.pickAFight = function(otherFighter) {
         if (confirmFight()) {
-            $location.path("/fight");
+            socket.emit('invite', otherFighter);
         }
     };
 

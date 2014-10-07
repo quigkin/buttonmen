@@ -6,9 +6,24 @@ A "pet project" implementation in nodejs of [Button Men](http://www.cheapass.com
 [![Build Status](https://travis-ci.org/quigkin/buttonmen.svg?branch=master)](https://travis-ci.org/quigkin/buttonmen)
 
 
-Next
+MVP
 -----------
-* [client] Ensure re-entering Lobby gets all events
+* [client] Upgrade to latest stable socketio on client and server; tired of old doc
+* [client] On accepting a fight; put both fighters in the same room
+* [client] Ensure re-entering Lobby gets all events but only once
+
+v1
+-----------
+* [client] Style it to match fighter artwork
+* [client] Allow gawkers to join a fight's room
+* [client] Custom confirmation and alert modals
+
+v2
+-----------
+* [client] Persistent user information on server
+* [client] Friends list with invite to game (email?)
+* [client] Enemies list with block messages from this person
+* [server] Spam protection
 * [server] Optimize sending large updates of rooms and names by only sending diffs
 * [client] Handle large lists
 
