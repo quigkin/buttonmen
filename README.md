@@ -11,12 +11,14 @@ MVP
 * [client] Upgrade to latest stable socketio on client and server; tired of old doc
 * [client] On accepting a fight; put both fighters in the same room
 * [client] Ensure re-entering Lobby gets all events but only once
+* [client][bug] When changing name, the old name appears in that player's player list
 
 v1
 -----------
 * [client] Style it to match fighter artwork
 * [client] Allow gawkers to join a fight's room
 * [client] Custom confirmation and alert modals
+* [client] Separate lobby/fight/help into separate app/modules
 
 v2
 -----------

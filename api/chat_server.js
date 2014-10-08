@@ -132,27 +132,32 @@ function handleFightInvitation(socket) {
             otherFighterSocketId = data['socketId'];
 
         if (confirmation === undefined) {
-            io.sockets.socket(otherFighterSocketId).emit('invite', {name: nickNames[socket.id], socketId: socket.id});
-            // io.to(otherFighterSocketId).emit('invite', {name: nickNames[socket.id]});
+            io.to(otherFighterSocketId).emit('invite', {name: nickNames[socket.id]});
         } else {
-            io.sockets.socket(otherFighterSocketId).emit('invite', {name: nickNames[socket.id], socketId: socket.id, confirmation: confirmation});
-            // io.to(otherFighterSocketId).emit('invite', {name: nickNames[socket.id], confirmation: confirmation});
+            io.to(otherFighterSocketId).emit('invite', {name: nickNames[socket.id], confirmation: confirmation});
         }
 
     });
 }
 
 function rooms() {
-    var currentRooms = io.sockets.manager.rooms,
+    var currentRooms = io.sockets.adapter.rooms,
         rooms = [];
+
     for (currentRoom in currentRooms) {
-        if (currentRoom !== '' && currentRoom != '/Lobby') {
-            currentMembers = currentRooms[currentRoom];
-            rooms.push({
-                room: currentRoom.substring(1),
-                player1: nickNames[currentMembers[0]],
-                player2: nickNames[currentMembers[1]]
-            });
+        // fight room is a uuid
+        if (currentRoom.length === 36) {
+            currentMembers = []
+            for (currentMember in currentRooms[currentRoom]) {
+                currentMembers.push(currentMember);
+            };
+            if (currentMembers.length > 0) {
+                rooms.push({
+                    room: currentRoom,
+                    player1: nickNames[currentMembers[0]],
+                    player2: nickNames[currentMembers[1]]
+                });
+            }
         }
     }
     return rooms;
